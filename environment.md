@@ -27,7 +27,5 @@ Due to the use of [Apex Optimizers](https://nvidia.github.io/apex/optimizers.htm
 ```
 git clone https://github.com/NVIDIA/apex
 cd apex
-git checkout tags/22.03 -b v22.03
-export CUDA_HOME='Cuda 11 install'
-pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" ./
+pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 ```
