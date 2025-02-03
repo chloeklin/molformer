@@ -1,0 +1,22 @@
+# PyTorch (with CUDA 11.0 support)
+torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+
+# Scientific computing libraries
+numpy==1.22.3
+pandas==1.2.4
+scikit-learn==0.24.2
+scipy==1.6.2
+
+# Transformer models and ML frameworks
+transformers==4.6.0
+pytorch-lightning==1.1.5
+pytorch-fast-transformers==0.4.0
+datasets==1.6.2
+
+# Jupyter and visualization tools
+jupyterlab==3.4.0
+ipywidgets==7.7.0
+bertviz==1.4.0
+
+# RDKit (pypi version, may differ from conda version)
+rdkit-pypi
