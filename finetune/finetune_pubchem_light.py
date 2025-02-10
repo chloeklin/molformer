@@ -444,7 +444,7 @@ class PropertyPredictionDataModule(pl.LightningDataModule):
         self.train_ds = train_ds
         # self.val_ds = [val_ds] + [test_ds]
         self.val_ds = val_ds
-        self.val_ds = test_ds
+        self.test_ds = test_ds
 
 
         # print(
