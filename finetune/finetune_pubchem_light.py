@@ -324,7 +324,7 @@ class LightningModule(pl.LightningModule):
 
         return {"avg_val_loss": avg_loss}
 
-    def test_step(self, test_batch, batch_idx, dataset_idx):
+    def test_step(self, test_batch, batch_idx):
         idx = test_batch[0]
         mask = test_batch[1]
         targets = test_batch[-1]
