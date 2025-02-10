@@ -1,0 +1,28 @@
+Loading python3/3.8.5
+  Loading requirement: intel-mkl/2020.2.254
+Currently Loaded Modulefiles:
+ 1) intel-mkl/2020.2.254   2) python3/3.8.5   3) cuda/11.0.3  
+`fused_weight_gradient_mlp_cuda` module not found. gradient accumulation fusion with weight gradient computation disabled.
+/scratch/um09/hl4138/molformer-venv/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:49: UserWarning: ModelCheckpoint(save_last=True, monitor=None) is a redundant configuration. You can save the last checkpoint with ModelCheckpoint(save_top_k=None, monitor=None).
+  warnings.warn(*args, **kwargs)
+Global seed set to 12345
+GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1,2,3]
+
+  | Name       | Type               | Params
+--------------------------------------------------
+0 | tok_emb    | Embedding          | 1.8 M 
+1 | drop       | Dropout            | 0     
+2 | blocks     | TransformerEncoder | 42.6 M
+3 | lang_model | lm_layer           | 2.4 M 
+4 | loss       | L1Loss             | 0     
+5 | net        | Net                | 1.2 M 
+--------------------------------------------------
+48.0 M    Trainable params
+0         Non-trainable params
+48.0 M    Total params
+Restored states from the checkpoint file at ./checkpoints_u0/u0/models/last.ckpt
+/scratch/um09/hl4138/molformer-venv/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:49: UserWarning: The validation_epoch_end should not return anything as of 9.1. To log, use self.log(...) or self.write(...) directly in the LightningModule
+  warnings.warn(*args, **kwargs)
+Saving latest checkpoint...
