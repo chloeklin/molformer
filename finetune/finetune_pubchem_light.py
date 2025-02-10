@@ -240,7 +240,7 @@ class LightningModule(pl.LightningModule):
         return {"loss": loss}
 
     def validation_step(self, val_batch, batch_idx, dataset_idx):
-        idx =     val_batch[0]
+        idx =   val_batch[0]
         mask = val_batch[1]
         targets = val_batch[-1]
 
@@ -324,6 +324,26 @@ class LightningModule(pl.LightningModule):
 
         return {"avg_val_loss": avg_loss}
 
+    def test_step(self, test_batch, batch_idx, dataset_idx):
+        idx = test_batch[0]
+        mask = test_batch[1]
+        targets = test_batch[-1]
+
+        # Forward pass
+        b, t = idx.size()
+        token_embeddings = self.tok_emb(idx)  # Token embedding
+        x = self.drop(token_embeddings)
+        x = self.blocks(x, length_mask=LM(mask.sum(-1)))
+        token_embeddings = x
+        input_mask_expanded = mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+        sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+        loss_input = sum_embeddings / sum_mask
+
+        # Get model predictions
+        loss, pred, actual = self.get_loss(loss_input, targets)
+
+        return {"test_loss": loss}
 
 def get_dataset(data_root, filename, dataset_len, aug, measure_name):
     df = pd.read_csv(os.path.join(data_root, filename))
@@ -422,7 +442,10 @@ class PropertyPredictionDataModule(pl.LightningDataModule):
         )
 
         self.train_ds = train_ds
-        self.val_ds = [val_ds] + [test_ds]
+        # self.val_ds = [val_ds] + [test_ds]
+        self.val_ds = val_ds
+        self.val_ds = test_ds
+
 
         # print(
         #     f"Train dataset size: {len(self.train_ds)}, val: {len(self.val_ds1), len(self.val_ds2)}, test: {len(self.test_ds)}"
@@ -431,18 +454,24 @@ class PropertyPredictionDataModule(pl.LightningDataModule):
     def collate(self, batch):
         tokens = self.tokenizer.batch_encode_plus([ smile[0] for smile in batch], padding=True, add_special_tokens=True)
         return (torch.tensor(tokens['input_ids']), torch.tensor(tokens['attention_mask']), torch.tensor([smile[1] for smile in batch]))
-
-    def val_dataloader(self):
-        return [
-            DataLoader(
-                ds,
+    
+    def test_dataloader(self):
+        return DataLoader(
+                self.test_ds,
                 batch_size=self.hparams.batch_size,
                 num_workers=self.hparams.num_workers,
                 shuffle=False,
                 collate_fn=self.collate,
             )
-            for ds in self.val_ds
-        ]
+
+    def val_dataloader(self):
+        return DataLoader(
+                self.val_ds,
+                batch_size=self.hparams.batch_size,
+                num_workers=self.hparams.num_workers,
+                shuffle=False,
+                collate_fn=self.collate,
+            )
 
     def train_dataloader(self):
         return DataLoader(
@@ -588,6 +617,7 @@ def main():
     trainer.fit(model, datamodule)
     toc = time.perf_counter()
     print('Time was {}'.format(toc - tic))
+    trainer.test(model, datamodule)
 
 
 if __name__ == '__main__':
