@@ -617,7 +617,7 @@ def main():
     trainer.fit(model, datamodule)
     toc = time.perf_counter()
     print('Time was {}'.format(toc - tic))
-    trainer.test(model, datamodule)
+    trainer.test(model, datamodule=datamodule)
 
 
 if __name__ == '__main__':
