@@ -8,9 +8,9 @@ python finetune_pubchem_light.py \
         --dropout 0.1 \
         --lr_start 3e-5 \
         --num_workers 8\
-        --max_epochs 500\
+        --max_epochs 100\
         --num_feats 32 \
-        --checkpoint_every 100 \
+        --checkpoint_every 10 \
         --data_root ../data/qm9 \
         --seed_path '../data/Pretrained MoLFormer/checkpoints/N-Step-Checkpoint_3_30000.ckpt' \
         --dataset_name qm9 \
