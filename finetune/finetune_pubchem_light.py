@@ -527,6 +527,7 @@ class ModelCheckpointAtEpochEnd(pl.Callback):
             trainer.checkpoint_callback.on_validation_end(trainer, pl_module)
 
 
+
 def append_to_file(filename, line):
     with open(filename, "a") as f:
         f.write(line + "\n")
@@ -574,7 +575,13 @@ def main():
 
     checkpoint_path = os.path.join(checkpoints_folder, margs.measure_name)
     checkpoint_callback = pl.callbacks.ModelCheckpoint(period=1, save_last=True, dirpath=checkpoint_dir, filename='checkpoint', verbose=True)
-
+    early_stop_callback = pl.callbacks.EarlyStopping(
+    monitor="val_loss",  # Adjust if using a different validation metric
+    patience=5,  # Number of epochs to wait for improvement
+    verbose=True,
+    mode="min"
+)
+    
     print(margs)
 
     logger = TensorBoardLogger(
@@ -606,17 +613,18 @@ def main():
     trainer = pl.Trainer(
         max_epochs=margs.max_epochs,
         default_root_dir=checkpoint_root,
-        gpus=1,
+        gpus=4,
         logger=logger,
         resume_from_checkpoint=resume_from_checkpoint,
         checkpoint_callback=checkpoint_callback,
+        callbacks=early_stop_callback,
         num_sanity_val_steps=0,
     )
 
     tic = time.perf_counter()
     trainer.fit(model, datamodule)
     toc = time.perf_counter()
-    print('Time was {}'.format(toc - tic))
+    print('Finetuning time was {}'.format(toc - tic))
     trainer.test(model, datamodule=datamodule)
 
 

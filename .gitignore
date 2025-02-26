@@ -1,5 +1,6 @@
 finetune/checkpoints_u0/*
 data/
+**/.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
