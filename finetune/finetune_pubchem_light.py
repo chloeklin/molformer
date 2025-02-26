@@ -625,8 +625,10 @@ def main():
     trainer.fit(model, datamodule)
     toc = time.perf_counter()
     print('Finetuning time was {}'.format(toc - tic))
+    tic = time.perf_counter()
     trainer.test(model, datamodule=datamodule)
-
+    toc = time.perf_counter()
+    print('Inference time was {}'.format(toc - tic))
 
 if __name__ == '__main__':
     main()
